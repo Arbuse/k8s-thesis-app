@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: thesis-app
+  namespace: default
+  labels:
+    release: k8s-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: thesis-app
+  namespaceSelector:
+    matchNames: [default]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s

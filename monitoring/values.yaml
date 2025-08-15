@@ -1,0 +1,16 @@
+grafana:
+  enabled: true
+  adminPassword: prom-operator
+  service:
+    type: ClusterIP
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+    serviceMonitorSelectorNilUsesHelmValues: false
+    # pozwólmy zbierać ServiceMonitory z całego klastra:
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+alertmanager:
+  enabled: true
