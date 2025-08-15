@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thesis-app
+  namespace: default
+  labels:
+    app: thesis-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thesis-app
+  template:
+    metadata:
+      labels:
+        app: thesis-app
+      # (opcjonalnie, do kroku z Prometheusem)
+      # annotations:
+      #   prometheus.io/scrape: "true"
+      #   prometheus.io/port: "8000"
+      #   prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: app
+          image: k8s-thesis-app:local
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ENV
+              value: "k8s"
+            - name: APP_VERSION
+              value: "0.1.0"
+            - name: PORT
+              value: "8000"
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
