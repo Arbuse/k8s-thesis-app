@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: k8s-thesis-app:local
+    container_name: k8s-thesis-app
+    environment:
+      ENV: compose
+      APP_VERSION: "0.1.0"
+      PORT: "8000"
+      # przydatne logi do diagnostyki
+      GUNICORN_CMD_ARGS: "--access-logfile - --error-logfile - --log-level debug"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
