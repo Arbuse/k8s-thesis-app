@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: thesis-app-rules
+  namespace: monitoring
+  labels:
+    release: k8s-monitoring
+spec:
+  groups:
+    - name: thesis-app.availability
+      interval: 30s
+      rules:
+        - alert: ThesisAppNoTraffic5m
+          expr: sum(increase(flask_http_request_total[5m])) == 0
+          for: 5m
+          labels:
+            severity: warning
+            app: thesis-app
+          annotations:
+            summary: "Brak ruchu do aplikacji przez ≥5 minut"
+            description: "W ostatnich 5 min nie zarejestrowano żadnych żądań w thesis-app."
+    - name: thesis-app.errors
+      interval: 30s
+      rules:
+        - alert: ThesisAppSlowEndpointErrors
+          expr: increase(slow_requests_total{status="error"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: warning
+            app: thesis-app
+          annotations:
+            summary: "Błędy na /slow wykryte"
+            description: "Wykryto błędne wywołania /slow w ostatnich 5 minutach."

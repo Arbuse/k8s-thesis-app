@@ -3,6 +3,7 @@ grafana:
   adminPassword: prom-operator
   service:
     type: ClusterIP
+
 prometheus:
   prometheusSpec:
     retention: 7d
@@ -12,5 +13,12 @@ prometheus:
     # pozwólmy zbierać ServiceMonitory z całego klastra:
     serviceMonitorSelector: {}
     serviceMonitorNamespaceSelector: {}
+
 alertmanager:
   enabled: true
+
+# ⤵️ Włącza metrics z kubeletu, w tym /metrics/cadvisor (CPU/MEM kontenerów i podów)
+kubelet:
+  serviceMonitor:
+    cAdvisor: true
+    probes: true
