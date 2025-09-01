@@ -10,6 +10,6 @@ spec:
     app: thesis-app
   ports:
     - name: http
-      port: 80            # port w klastrze
-      targetPort: 8000    # port kontenera
+      port: 80            # claster port
+      targetPort: 8000    # container port
   type: ClusterIP

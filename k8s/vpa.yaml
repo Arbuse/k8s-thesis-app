@@ -1,0 +1,14 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: thesis-app-vpa
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: thesis-app
+  updatePolicy:
+    # "Off" – tylko rekomendacje; "Initial" – przy tworzeniu poda;
+    # "Auto" – modyfikuje requests w locie (możliwy restart); "Recreate" – wymusza restart
+    updateMode: "Off"
